@@ -1,5 +1,9 @@
 use chrono::{Duration, Local, TimeZone};
-use std::{env, fmt, process};
+use std::{
+    env, fmt,
+    io::{self, Write},
+    process, thread,
+};
 
 /// The format in which dates should be supplied to the program.
 /// See [chrono's docs](https://docs.rs/chrono/0.4.19/chrono/format/strftime/index.html)
@@ -19,8 +23,17 @@ fn main() {
             process::exit(1);
         });
 
-    let split = PartitionedDuration::new(event - Local::now());
-    println!("Until event: {}", split);
+    loop {
+        // compute time until event as a partitioned duration
+        let until = PartitionedDuration::new(event - Local::now());
+
+        // display duration, wait, then erase line
+        print!("{}", until);
+        io::stdout().flush().unwrap();
+        thread::sleep(std::time::Duration::from_millis(500));
+        print!("\x1b[2K\x1b[1G"); // erase line with escape codes
+        io::stdout().flush().unwrap();
+    }
 }
 
 /// PartitionedDuration represents a Duration, split into component parts in such
@@ -69,11 +82,23 @@ impl PartitionedDuration {
 
 impl fmt::Display for PartitionedDuration {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // TODO: omit units that have value 0?
+        fn plural(quantity: i64) -> String {
+            (if quantity == 1 { "" } else { "s" }).to_string()
+        }
+
         write!(
             f,
-            "{} weeks, {} days, {} hours, {} minutes, and {} seconds",
-            self.weeks, self.days, self.hours, self.minutes, self.seconds
+            "{} week{}, {} day{}, {} hour{}, {} minute{}, and {} second{}",
+            self.weeks,
+            plural(self.weeks),
+            self.days,
+            plural(self.days),
+            self.hours,
+            plural(self.hours),
+            self.minutes,
+            plural(self.minutes),
+            self.seconds,
+            plural(self.seconds)
         )
     }
 }
