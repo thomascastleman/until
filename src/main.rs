@@ -9,6 +9,13 @@ use std::{
 /// See [chrono's docs](https://docs.rs/chrono/0.4.19/chrono/format/strftime/index.html)
 const DATE_FORMAT: &'static str = "%Y-%m-%d %T";
 
+macro_rules! print_and_flush {
+    ($fmt:expr, $($args:tt)*) => {
+        print!("{}", std::format_args!($fmt, $($args)*));
+        io::stdout().flush().unwrap();
+    };
+}
+
 fn main() {
     let date = env::args().nth(1).unwrap_or_else(|| {
         println!("Expected a date in the format: {}", DATE_FORMAT);
@@ -28,11 +35,9 @@ fn main() {
         let until = PartitionedDuration::new(event - Local::now());
 
         // display duration, wait, then erase line
-        print!("{}", until);
-        io::stdout().flush().unwrap();
+        print_and_flush!("{}", until);
         thread::sleep(std::time::Duration::from_millis(500));
-        print!("\x1b[2K\x1b[1G"); // erase line with escape codes
-        io::stdout().flush().unwrap();
+        print_and_flush!("{}", "\x1b[2K\x1b[1G"); // erase line
     }
 }
 
