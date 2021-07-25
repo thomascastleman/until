@@ -3,6 +3,7 @@ name = "until"
 version = "0.1.0"
 authors = ["Thomas Castleman <thomascastleman0@gmail.com>"]
 edition = "2018"
+description = "A program for determining how much time is left until an event"
 
 [dependencies]
 chrono = "0.4.19"
