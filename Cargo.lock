@@ -23,9 +23,9 @@ dependencies = [
 
 [[package]]
 name = "duration-breakdown"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8dac4d70e2d385f529502f6a873c79f147ef41cc7c19945f4e63999ce49b9310"
+checksum = "62d015855397973d353fd9e37900d88066c8e059cdba6f22877a5b85b1d75b25"
 
 [[package]]
 name = "libc"

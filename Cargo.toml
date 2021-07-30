@@ -7,4 +7,4 @@ description = "A program for determining how much time is left until an event"
 
 [dependencies]
 chrono = "0.4.19"
-duration-breakdown = "0.1.1"
+duration-breakdown = "0.2.0"
